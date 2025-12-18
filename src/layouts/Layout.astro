@@ -6,7 +6,6 @@ interface Props {
 const { title } = Astro.props;
 
 import "../styles/global.css";
-
 ---
 
 <!doctype html>
@@ -17,22 +16,38 @@ import "../styles/global.css";
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/png" href="/favicon.png" />
 		<meta name="generator" content={Astro.generator} />
+		
+		<link rel="canonical" href={Astro.url} />
+
 		<title>{title}</title>
+		
 		<link rel="preconnect" href="https://fonts.googleapis.com">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 		<script
-	        type="text/partytown"
-	        src="https://www.googletagmanager.com/gtag/js?id=G-Z14FG0JD8W">
-	    </script>
-	    <script type="text/partytown">
-	        window.dataLayer = window.dataLayer || [];
-	        function gtag(){dataLayer.push(arguments);}
-	        gtag('js', new Date());
+			type="text/partytown"
+			src="https://www.googletagmanager.com/gtag/js?id=G-Z14FG0JD8W">
+		</script>
+		<script type="text/partytown">
+			window.dataLayer = window.dataLayer || [];
+			function gtag(){dataLayer.push(arguments);}
+			gtag('js', new Date());
 
-	        gtag('config', 'G-Z14FG0JD8W');
-	    </script>
+			gtag('config', 'G-Z14FG0JD8W');
+		</script>
+
+		<meta property="og:type" content="website" />
+		<meta property="og:url" content="https://validpool.com/" />
+		<meta property="og:title" content="ValidPool | Commercial Pool Compliance Software" />
+		<meta property="og:description" content="Stop guessing chemical doses. The digital logbook for Pool Pros and HOAs that calculates LSI, protects against liability, and manages your fleet." />
+		<meta property="og:image" content="https://validpool.com/social-preview.jpg" />
+
+		<meta property="twitter:card" content="summary_large_image" />
+		<meta property="twitter:url" content="https://validpool.com/" />
+		<meta property="twitter:title" content="ValidPool | The Smart Chemical Logbook" />
+		<meta property="twitter:description" content="Commercial pool compliance software. Digital chemical logs and LSI calculator." />
+		<meta property="twitter:image" content="https://validpool.com/social-preview.jpg" />
 
 	</head>
 	<body class="bg-slate-50 text-slate-900 font-sans antialiased">
@@ -41,7 +56,13 @@ import "../styles/global.css";
 </html>
 
 <style is:global>
+	/* Forzar la fuente Inter en todo el sitio */
 	body {
 		font-family: 'Inter', system-ui, sans-serif;
+	}
+	/* Suavizado de fuentes para que se vea más premium en Mac/iOS */
+	html {
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
 	}
 </style>
