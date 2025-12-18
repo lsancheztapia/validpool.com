@@ -1,0 +1,133 @@
+---
+// src/components/CalculatorModal.astro
+---
+
+<button 
+  id="open-calc-btn"
+  class="fixed bottom-6 right-6 z-40 bg-blue-600 hover:bg-blue-700 text-white p-4 rounded-full shadow-2xl flex items-center gap-2 transition transform hover:scale-105"
+>
+  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+  </svg>
+  <span class="font-bold hidden md:inline">Quick Calc</span>
+</button>
+
+<div id="calc-modal" class="fixed inset-0 z-50 hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+  <div id="modal-backdrop" class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity opacity-0"></div>
+
+  <div class="flex items-center justify-center min-h-screen p-4 text-center sm:p-0">
+    <div id="modal-panel" class="relative bg-white rounded-2xl text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-lg w-full scale-95 opacity-0">
+      
+      <div class="bg-slate-50 px-4 py-3 border-b border-slate-100 flex justify-between items-center">
+        <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+          🧪 Chlorine Dosing Calculator
+        </h3>
+        <button id="close-calc-btn" class="text-slate-400 hover:text-slate-600">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+      </div>
+
+      <div class="p-6 space-y-4">
+        
+        <div>
+          <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1">Pool Volume (Gallons)</label>
+          <input type="number" id="volume" placeholder="e.g. 15000" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none font-mono text-slate-700">
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1">Current FC (ppm)</label>
+            <input type="number" id="current-ppm" step="0.5" placeholder="0.0" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none font-mono text-slate-700">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1">Target FC (ppm)</label>
+            <input type="number" id="target-ppm" step="0.5" value="3.0" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none font-mono text-slate-700">
+          </div>
+        </div>
+
+        <div class="mt-6 bg-blue-50 border border-blue-100 rounded-xl p-4 text-center">
+          <p class="text-sm text-blue-600 font-medium mb-1">Add Liquid Chlorine (12.5%):</p>
+          <div class="text-4xl font-bold text-blue-900 tracking-tight" id="result-display">0 <span class="text-xl text-blue-500 font-normal">fl oz</span></div>
+        </div>
+        
+        <p class="text-xs text-slate-400 text-center mt-2">
+          *Based on 12.5% Sodium Hypochlorite (Commercial Grade).
+        </p>
+      </div>
+
+      <div class="bg-slate-900 px-4 py-3 text-center">
+        <a href="#waitlist" id="modal-cta" class="text-sm text-blue-200 hover:text-white font-medium">
+          Get the full LSI & Acid calculator &rarr;
+        </a>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+  // Elements
+  const btn = document.getElementById('open-calc-btn');
+  const modal = document.getElementById('calc-modal');
+  const backdrop = document.getElementById('modal-backdrop');
+  const panel = document.getElementById('modal-panel');
+  const closeBtn = document.getElementById('close-calc-btn');
+  const modalCta = document.getElementById('modal-cta');
+
+  // Inputs
+  const volumeInput = document.getElementById('volume') as HTMLInputElement;
+  const currentInput = document.getElementById('current-ppm') as HTMLInputElement;
+  const targetInput = document.getElementById('target-ppm') as HTMLInputElement;
+  const resultDisplay = document.getElementById('result-display');
+
+  // Open Logic
+  function openModal() {
+    modal.classList.remove('hidden');
+    // Small delay for transition
+    setTimeout(() => {
+      backdrop.classList.remove('opacity-0');
+      panel.classList.remove('scale-95', 'opacity-0');
+      panel.classList.add('scale-100', 'opacity-100');
+    }, 10);
+  }
+
+  // Close Logic
+  function closeModal() {
+    backdrop.classList.add('opacity-0');
+    panel.classList.remove('scale-100', 'opacity-100');
+    panel.classList.add('scale-95', 'opacity-0');
+    setTimeout(() => {
+      modal.classList.add('hidden');
+    }, 300);
+  }
+
+  // Calculation Logic (The Math)
+  function calculate() {
+    const vol = parseFloat(volumeInput.value) || 0;
+    const current = parseFloat(currentInput.value) || 0;
+    const target = parseFloat(targetInput.value) || 0;
+
+    if (vol > 0 && target > current) {
+      const deficit = target - current;
+      // Factor: 10.7 fl oz of 12.5% chlorine raises 10k gallons by 1ppm
+      const dose = deficit * 10.7 * (vol / 10000);
+      resultDisplay.innerHTML = `${dose.toFixed(1)} <span class="text-xl text-blue-500 font-normal">fl oz</span>`;
+    } else {
+      resultDisplay.innerHTML = `0 <span class="text-xl text-blue-500 font-normal">fl oz</span>`;
+    }
+  }
+
+  // Event Listeners
+  btn.addEventListener('click', openModal);
+  closeBtn.addEventListener('click', closeModal);
+  modalCta.addEventListener('click', closeModal); // Close when they click "Get full app"
+  
+  // Close on click outside
+  backdrop.addEventListener('click', closeModal);
+
+  // Auto-calculate on input
+  [volumeInput, currentInput, targetInput].forEach(input => {
+    input.addEventListener('input', calculate);
+  });
+
+</script>

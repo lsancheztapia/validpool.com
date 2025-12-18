@@ -3,6 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import { Image } from 'astro:assets';
 import appMockupImage from '../assets/PoolGuard.png'; // Asegúrate de que el nombre coincida
 import logoPng from '../assets/ValidPoolLogo.png'; // Import your PNG logo
+import CalculatorModal from '../components/CalculatorModal.astro'
 ---
 
 <Layout title="ValidPool | The Smart Chemical Logbook for Pros">
@@ -151,6 +152,8 @@ import logoPng from '../assets/ValidPoolLogo.png'; // Import your PNG logo
       </a>
     </section>
   </main>
+
+  <CalculatorModal />
 
   <footer class="bg-slate-950 text-slate-400 py-8 text-center text-sm">
     <p>&copy; 2025 ValidPool. All rights reserved.</p>
